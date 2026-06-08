@@ -9,7 +9,6 @@ import {
   Users,
   BookOpen,
   Briefcase,
-  Megaphone,
   Calendar,
   FileText,
   Bell,
@@ -34,10 +33,8 @@ const navItems = [
   { icon: Users, label: "Alumni", to: "/admin/alumni" },
   { icon: BookOpen, label: "Courses", to: "/admin/courses" },
   { icon: Briefcase, label: "Employment", to: "/admin/employment" },
-  { icon: Megaphone, label: "Announcements", to: "/admin/announcements" },
   { icon: Calendar, label: "Events", to: "/admin/events" },
   { icon: FileText, label: "Job Posts", to: "/admin/jobs" },
-  { icon: Bell, label: "Notifications", to: "/admin/notifications" },
 ];
 
 function getInitials(name: string) {

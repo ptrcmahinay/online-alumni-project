@@ -62,14 +62,12 @@ function AdminDashboardPage() {
 
   useEffect(() => {
     async function loadActivity() {
-      const [annRes, evtRes, oppRes] = await Promise.all([
-        supabase.from("announcements").select("title, created_at").order("created_at", { ascending: false }).limit(3),
+      const [evtRes, oppRes] = await Promise.all([
         supabase.from("events").select("title, created_at").order("created_at", { ascending: false }).limit(3),
         supabase.from("opportunities").select("title, created_at").order("created_at", { ascending: false }).limit(3),
       ]);
 
       const items = [
-        ...(annRes.data?.map(a => ({ user: "System", action: `Posted announcement: ${a.title}`, time: new Date(a.created_at).toLocaleDateString() })) || []),
         ...(evtRes.data?.map(e => ({ user: "System", action: `Created event: ${e.title}`, time: new Date(e.created_at).toLocaleDateString() })) || []),
         ...(oppRes.data?.map(o => ({ user: "System", action: `New job post: ${o.title}`, time: new Date(o.created_at).toLocaleDateString() })) || []),
       ].sort((a, b) => new Date(b.time).getTime() - new Date(a.time).getTime()).slice(0, 5);

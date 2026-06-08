@@ -24,12 +24,10 @@ import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as AdminUsersRouteImport } from './routes/admin.users'
-import { Route as AdminNotificationsRouteImport } from './routes/admin.notifications'
 import { Route as AdminJobsRouteImport } from './routes/admin.jobs'
 import { Route as AdminEventsRouteImport } from './routes/admin.events'
 import { Route as AdminEmploymentRouteImport } from './routes/admin.employment'
 import { Route as AdminCoursesRouteImport } from './routes/admin.courses'
-import { Route as AdminAnnouncementsRouteImport } from './routes/admin.announcements'
 import { Route as AdminAlumniRouteImport } from './routes/admin.alumni'
 
 const SettingsRoute = SettingsRouteImport.update({
@@ -107,11 +105,6 @@ const AdminUsersRoute = AdminUsersRouteImport.update({
   path: '/users',
   getParentRoute: () => AdminRoute,
 } as any)
-const AdminNotificationsRoute = AdminNotificationsRouteImport.update({
-  id: '/notifications',
-  path: '/notifications',
-  getParentRoute: () => AdminRoute,
-} as any)
 const AdminJobsRoute = AdminJobsRouteImport.update({
   id: '/jobs',
   path: '/jobs',
@@ -130,11 +123,6 @@ const AdminEmploymentRoute = AdminEmploymentRouteImport.update({
 const AdminCoursesRoute = AdminCoursesRouteImport.update({
   id: '/courses',
   path: '/courses',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminAnnouncementsRoute = AdminAnnouncementsRouteImport.update({
-  id: '/announcements',
-  path: '/announcements',
   getParentRoute: () => AdminRoute,
 } as any)
 const AdminAlumniRoute = AdminAlumniRouteImport.update({
@@ -158,12 +146,10 @@ export interface FileRoutesByFullPath {
   '/register': typeof RegisterRoute
   '/settings': typeof SettingsRoute
   '/admin/alumni': typeof AdminAlumniRoute
-  '/admin/announcements': typeof AdminAnnouncementsRoute
   '/admin/courses': typeof AdminCoursesRoute
   '/admin/employment': typeof AdminEmploymentRoute
   '/admin/events': typeof AdminEventsRoute
   '/admin/jobs': typeof AdminJobsRoute
-  '/admin/notifications': typeof AdminNotificationsRoute
   '/admin/users': typeof AdminUsersRoute
   '/admin/': typeof AdminIndexRoute
 }
@@ -181,12 +167,10 @@ export interface FileRoutesByTo {
   '/register': typeof RegisterRoute
   '/settings': typeof SettingsRoute
   '/admin/alumni': typeof AdminAlumniRoute
-  '/admin/announcements': typeof AdminAnnouncementsRoute
   '/admin/courses': typeof AdminCoursesRoute
   '/admin/employment': typeof AdminEmploymentRoute
   '/admin/events': typeof AdminEventsRoute
   '/admin/jobs': typeof AdminJobsRoute
-  '/admin/notifications': typeof AdminNotificationsRoute
   '/admin/users': typeof AdminUsersRoute
   '/admin': typeof AdminIndexRoute
 }
@@ -206,12 +190,10 @@ export interface FileRoutesById {
   '/register': typeof RegisterRoute
   '/settings': typeof SettingsRoute
   '/admin/alumni': typeof AdminAlumniRoute
-  '/admin/announcements': typeof AdminAnnouncementsRoute
   '/admin/courses': typeof AdminCoursesRoute
   '/admin/employment': typeof AdminEmploymentRoute
   '/admin/events': typeof AdminEventsRoute
   '/admin/jobs': typeof AdminJobsRoute
-  '/admin/notifications': typeof AdminNotificationsRoute
   '/admin/users': typeof AdminUsersRoute
   '/admin/': typeof AdminIndexRoute
 }
@@ -232,12 +214,10 @@ export interface FileRouteTypes {
     | '/register'
     | '/settings'
     | '/admin/alumni'
-    | '/admin/announcements'
     | '/admin/courses'
     | '/admin/employment'
     | '/admin/events'
     | '/admin/jobs'
-    | '/admin/notifications'
     | '/admin/users'
     | '/admin/'
   fileRoutesByTo: FileRoutesByTo
@@ -255,12 +235,10 @@ export interface FileRouteTypes {
     | '/register'
     | '/settings'
     | '/admin/alumni'
-    | '/admin/announcements'
     | '/admin/courses'
     | '/admin/employment'
     | '/admin/events'
     | '/admin/jobs'
-    | '/admin/notifications'
     | '/admin/users'
     | '/admin'
   id:
@@ -279,12 +257,10 @@ export interface FileRouteTypes {
     | '/register'
     | '/settings'
     | '/admin/alumni'
-    | '/admin/announcements'
     | '/admin/courses'
     | '/admin/employment'
     | '/admin/events'
     | '/admin/jobs'
-    | '/admin/notifications'
     | '/admin/users'
     | '/admin/'
   fileRoutesById: FileRoutesById
@@ -412,13 +388,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminUsersRouteImport
       parentRoute: typeof AdminRoute
     }
-    '/admin/notifications': {
-      id: '/admin/notifications'
-      path: '/notifications'
-      fullPath: '/admin/notifications'
-      preLoaderRoute: typeof AdminNotificationsRouteImport
-      parentRoute: typeof AdminRoute
-    }
     '/admin/jobs': {
       id: '/admin/jobs'
       path: '/jobs'
@@ -447,13 +416,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminCoursesRouteImport
       parentRoute: typeof AdminRoute
     }
-    '/admin/announcements': {
-      id: '/admin/announcements'
-      path: '/announcements'
-      fullPath: '/admin/announcements'
-      preLoaderRoute: typeof AdminAnnouncementsRouteImport
-      parentRoute: typeof AdminRoute
-    }
     '/admin/alumni': {
       id: '/admin/alumni'
       path: '/alumni'
@@ -466,24 +428,20 @@ declare module '@tanstack/react-router' {
 
 interface AdminRouteChildren {
   AdminAlumniRoute: typeof AdminAlumniRoute
-  AdminAnnouncementsRoute: typeof AdminAnnouncementsRoute
   AdminCoursesRoute: typeof AdminCoursesRoute
   AdminEmploymentRoute: typeof AdminEmploymentRoute
   AdminEventsRoute: typeof AdminEventsRoute
   AdminJobsRoute: typeof AdminJobsRoute
-  AdminNotificationsRoute: typeof AdminNotificationsRoute
   AdminUsersRoute: typeof AdminUsersRoute
   AdminIndexRoute: typeof AdminIndexRoute
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
   AdminAlumniRoute: AdminAlumniRoute,
-  AdminAnnouncementsRoute: AdminAnnouncementsRoute,
   AdminCoursesRoute: AdminCoursesRoute,
   AdminEmploymentRoute: AdminEmploymentRoute,
   AdminEventsRoute: AdminEventsRoute,
   AdminJobsRoute: AdminJobsRoute,
-  AdminNotificationsRoute: AdminNotificationsRoute,
   AdminUsersRoute: AdminUsersRoute,
   AdminIndexRoute: AdminIndexRoute,
 }
