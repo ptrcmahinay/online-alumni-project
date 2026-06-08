@@ -72,11 +72,11 @@ function DashboardPage() {
 
   const profileFields = [
     { label: "Personal Info", done: !!profile?.full_name },
-    { label: "Student Number", done: false },
+    { label: "Student Number", done: !!profile?.student_number },
     { label: "Course & Batch", done: !!profile?.course && !!profile?.batch },
-    { label: "Employment Status", done: false },
-    { label: "Profile Picture", done: false },
-    { label: "Resume Upload", done: false },
+    { label: "Employment Status", done: !!profile?.employment_status },
+    { label: "Profile Picture", done: !!profile?.avatar_url },
+    { label: "Resume Upload", done: !!profile?.resume_url },
   ];
 
   const completed = profileFields.filter((f) => f.done).length;

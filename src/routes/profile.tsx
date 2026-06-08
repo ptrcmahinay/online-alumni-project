@@ -99,7 +99,7 @@ function formFromProfile(p: Record<string, any> | null | undefined): FormFields 
 }
 
 function ProfilePage() {
-  const { user, profile, isAdmin } = useAuth();
+  const { user, profile, isAdmin, refreshProfile } = useAuth();
   const { setDirty } = useUnsavedChanges();
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
@@ -227,6 +227,7 @@ function ProfilePage() {
     setPendingResume(null);
     setPendingCerts([]);
     if (pendingAvatarUrl.current) { URL.revokeObjectURL(pendingAvatarUrl.current); pendingAvatarUrl.current = null; }
+    refreshProfile();
     setTimeout(() => setSaved(false), 3000);
   }
 
