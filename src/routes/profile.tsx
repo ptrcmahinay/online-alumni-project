@@ -339,20 +339,6 @@ function ProfilePage() {
                 )}
               </div>
             </div>
-            <div className="sm:ml-auto">
-              <Button
-                onClick={handleSave}
-                disabled={saving}
-                className="gap-2 bg-cvsu-dark text-white hover:bg-cvsu-green"
-              >
-                {saving ? (
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                ) : (
-                  <Save className="h-4 w-4" />
-                )}
-                {saved ? "Saved!" : "Save changes"}
-              </Button>
-            </div>
           </CardContent>
         </Card>
 
@@ -750,6 +736,24 @@ function ProfilePage() {
             </Card>
           </TabsContent>
         </Tabs>
+      </div>
+
+      <div className="sticky bottom-0 flex items-center justify-end gap-3 rounded-lg border border-cvsu-green/10 bg-white p-4 shadow-sm">
+        {saved && (
+          <span className="text-sm text-cvsu-green">Saved successfully!</span>
+        )}
+        <Button
+          onClick={handleSave}
+          disabled={saving}
+          className="gap-2 bg-cvsu-dark text-white hover:bg-cvsu-green"
+        >
+          {saving ? (
+            <Loader2 className="h-4 w-4 animate-spin" />
+          ) : (
+            <Save className="h-4 w-4" />
+          )}
+          {saved ? "Saved!" : "Save changes"}
+        </Button>
       </div>
 
       <UnsavedChangesDialog onSave={handleSave} onDiscard={() => {}} />

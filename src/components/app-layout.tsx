@@ -3,7 +3,7 @@ import { Link, useNavigate, useLocation } from "@tanstack/react-router";
 import { useAuth } from "@/lib/auth";
 import { supabase } from "@/lib/supabase";
 import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import logo from "@/assets/logo.png";
 import {
   LayoutDashboard,
@@ -118,7 +118,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         </div>
 
         {/* Nav */}
-        <nav className="overflow-y-auto p-4">
+        <nav className="flex-1 overflow-y-auto p-4">
           <div className="space-y-1">
             {navItems.map((item) => {
               const active = location.pathname === item.to;
@@ -146,6 +146,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         <div className="border-t border-white/10 p-4">
           <div className={`flex items-center ${collapsed ? "justify-center" : "gap-3"}`}>
             <Avatar className="h-8 w-8">
+              <AvatarImage src={profile?.avatar_url ?? undefined} alt={profile?.full_name || "User"} />
               <AvatarFallback className="bg-white/20 text-xs text-white">{initials}</AvatarFallback>
             </Avatar>
             {!collapsed && (
@@ -201,6 +202,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                 className="flex items-center gap-2 rounded-lg p-1.5 hover:bg-cvsu-light transition"
               >
                 <Avatar className="h-8 w-8">
+                  <AvatarImage src={profile?.avatar_url ?? undefined} alt={profile?.full_name || "User"} />
                   <AvatarFallback className="bg-cvsu-dark text-xs text-white">{initials}</AvatarFallback>
                 </Avatar>
                 <ChevronDown className={`hidden h-4 w-4 text-cvsu-green/60 transition sm:block ${profileOpen ? "rotate-180" : ""}`} />

@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { Link, Outlet, createFileRoute, useNavigate, useLocation } from "@tanstack/react-router";
 import { useAuth } from "@/lib/auth";
 import { supabase } from "@/lib/supabase";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import logo from "@/assets/logo.png";
 import {
   LayoutDashboard,
@@ -17,11 +17,9 @@ import {
   Menu,
   X,
   ArrowLeft,
-  Search,
   User,
   ChevronDown,
   PanelLeftClose,
-  PanelLeft,
 } from "lucide-react";
 
 export const Route = createFileRoute("/admin")({
@@ -145,6 +143,7 @@ function AdminLayout() {
         <div className="border-t border-white/10 p-4">
           <div className={`flex items-center ${collapsed ? "justify-center" : "gap-3"}`}>
             <Avatar className="h-8 w-8">
+              <AvatarImage src={profile?.avatar_url ?? undefined} alt={profile?.full_name || "User"} />
               <AvatarFallback className="bg-white/20 text-xs text-white">{initials}</AvatarFallback>
             </Avatar>
             {!collapsed && (
@@ -156,13 +155,6 @@ function AdminLayout() {
               </div>
             )}
           </div>
-          <button
-            onClick={() => setCollapsed(!collapsed)}
-            className="mt-3 flex w-full items-center justify-center rounded-lg py-1.5 text-white/40 hover:bg-white/10 hover:text-white transition"
-            title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
-          >
-            {collapsed ? <PanelLeft className="h-4 w-4" /> : <PanelLeftClose className="h-4 w-4" />}
-          </button>
         </div>
       </aside>
 
@@ -175,6 +167,13 @@ function AdminLayout() {
             >
               <Menu className="h-5 w-5" />
             </button>
+            <button
+              onClick={() => setCollapsed(!collapsed)}
+              className="hidden text-cvsu-green/60 hover:text-cvsu-dark lg:block"
+              title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+            >
+              <PanelLeftClose className="h-5 w-5" />
+            </button>
             <Link
               to="/dashboard"
               className="flex items-center gap-1.5 text-xs text-cvsu-green/50 hover:text-cvsu-green"
@@ -182,13 +181,6 @@ function AdminLayout() {
               <ArrowLeft className="h-3 w-3" />
               Back to portal
             </Link>
-            <div className="relative hidden md:block">
-              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-cvsu-green/40" />
-              <input
-                placeholder="Search alumni..."
-                className="h-10 w-56 rounded-lg border border-cvsu-green/10 bg-cvsu-light pl-9 pr-4 text-sm outline-none focus:border-cvsu-green/30 lg:w-72"
-              />
-            </div>
           </div>
 
           <div className="flex items-center gap-2">
@@ -203,6 +195,7 @@ function AdminLayout() {
                 className="flex items-center gap-2 rounded-lg p-1.5 hover:bg-cvsu-light transition"
               >
                 <Avatar className="h-8 w-8">
+                  <AvatarImage src={profile?.avatar_url ?? undefined} alt={profile?.full_name || "User"} />
                   <AvatarFallback className="bg-cvsu-dark text-xs text-white">{initials}</AvatarFallback>
                 </Avatar>
                 <ChevronDown className={`hidden h-4 w-4 text-cvsu-green/60 transition sm:block ${profileOpen ? "rotate-180" : ""}`} />
