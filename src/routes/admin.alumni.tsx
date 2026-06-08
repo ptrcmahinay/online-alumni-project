@@ -2,12 +2,12 @@ import { useState, useEffect, useMemo } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { supabase } from "@/lib/supabase";
 import type { Profile, Career } from "@/lib/database.types";
+import { ProfileCard } from "@/components/profile-card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Table,
   TableBody,
@@ -25,18 +25,8 @@ import {
 import {
   Search,
   Eye,
-  User,
   Briefcase,
-  GraduationCap,
-  FileText,
-  MapPin,
-  Phone,
-  Calendar,
-  BookOpen,
-  Globe,
   Building2,
-  Upload,
-  ExternalLink,
   Loader2,
   CheckCircle2,
   XCircle,
@@ -196,159 +186,22 @@ function AdminAlumniPage() {
       </Card>
 
       <Dialog open={viewOpen} onOpenChange={setViewOpen}>
-        <DialogContent className="max-w-2xl">
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle className="flex items-center gap-3">
-              <Avatar className="h-10 w-10">
-                {selected?.avatar_url ? (
-                  <AvatarImage src={selected.avatar_url} alt={selected.full_name ?? ""} />
-                ) : null}
-                <AvatarFallback className="bg-cvsu-dark text-white text-sm">
-                  {getInitials(selected?.full_name ?? "")}
-                </AvatarFallback>
-              </Avatar>
-              <div>
-                <div className="text-lg">{selected?.full_name}</div>
-                <div className="text-sm font-normal text-cvsu-green/60">
-                  {selected?.course ? `${selected.course} · Batch ${selected.batch ?? "—"}` : selected?.batch ? `Batch ${selected.batch}` : "—"}
-                </div>
-              </div>
-            </DialogTitle>
+            <DialogTitle className="sr-only">Alumni Profile</DialogTitle>
           </DialogHeader>
-
           {selected && (
-            <>
-            <Tabs defaultValue="personal" className="mt-2">
-              <TabsList className="border-cvsu-green/10 bg-cvsu-light w-full justify-start">
-                <TabsTrigger value="personal" className="gap-1.5">
-                  <User className="h-3.5 w-3.5" />
-                  Personal
-                </TabsTrigger>
-                <TabsTrigger value="education" className="gap-1.5">
-                  <GraduationCap className="h-3.5 w-3.5" />
-                  Education
-                </TabsTrigger>
-                <TabsTrigger value="work" className="gap-1.5">
-                  <Briefcase className="h-3.5 w-3.5" />
-                  Work ({selected.careers.length})
-                </TabsTrigger>
-                <TabsTrigger value="documents" className="gap-1.5">
-                  <FileText className="h-3.5 w-3.5" />
-                  Documents
-                </TabsTrigger>
-              </TabsList>
-
-              <TabsContent value="personal" className="space-y-4 pt-4">
-                <div className="grid grid-cols-2 gap-x-6 gap-y-3 text-sm">
-                  <div>
-                    <div className="text-xs text-cvsu-green/60 uppercase tracking-wider">Full name</div>
-                    <div className="text-cvsu-dark font-medium">{selected.full_name ?? "—"}</div>
-                  </div>
-                  <div>
-                    <div className="text-xs text-cvsu-green/60 uppercase tracking-wider">Phone</div>
-                    <div className="flex items-center gap-1.5 text-cvsu-dark">
-                      <Phone className="h-3 w-3 text-cvsu-green/40" />
-                      {selected.phone ?? "—"}
-                    </div>
-                  </div>
-                  <div>
-                    <div className="text-xs text-cvsu-green/60 uppercase tracking-wider">Location</div>
-                    <div className="flex items-center gap-1.5 text-cvsu-dark">
-                      <MapPin className="h-3 w-3 text-cvsu-green/40" />
-                      {selected.location ?? "—"}
-                    </div>
-                  </div>
-                  <div>
-                    <div className="text-xs text-cvsu-green/60 uppercase tracking-wider">Employment status</div>
-                    <div>
-                      {selected.employment_status ? (
-                        <Badge variant="secondary" className="bg-emerald-100 text-emerald-700">
-                          {selected.employment_status}
-                        </Badge>
-                      ) : (
-                        "—"
-                      )}
-                    </div>
-                  </div>
-                  <div>
-                    <div className="text-xs text-cvsu-green/60 uppercase tracking-wider">Industry</div>
-                    <div className="text-cvsu-dark">{selected.industry ?? "—"}</div>
-                  </div>
-                  <div className="col-span-2">
-                    <div className="text-xs text-cvsu-green/60 uppercase tracking-wider">Bio</div>
-                    <div className="text-cvsu-dark">{selected.bio || "—"}</div>
-                  </div>
-                </div>
-
-                {(selected.website || selected.linkedin || selected.github || selected.twitter) && (
-                  <div>
-                    <div className="text-xs text-cvsu-green/60 uppercase tracking-wider mb-2">Social Links</div>
-                    <div className="flex flex-wrap gap-2">
-                      {selected.website && (
-                        <a href={selected.website} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 rounded-lg border border-cvsu-green/10 px-3 py-1.5 text-xs text-cvsu-green hover:bg-cvsu-light">
-                          <Globe className="h-3 w-3" /> Website
-                        </a>
-                      )}
-                      {selected.linkedin && (
-                        <a href={selected.linkedin} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 rounded-lg border border-cvsu-green/10 px-3 py-1.5 text-xs text-cvsu-green hover:bg-cvsu-light">
-                          <ExternalLink className="h-3 w-3" /> LinkedIn
-                        </a>
-                      )}
-                      {selected.github && (
-                        <a href={selected.github} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 rounded-lg border border-cvsu-green/10 px-3 py-1.5 text-xs text-cvsu-green hover:bg-cvsu-light">
-                          <ExternalLink className="h-3 w-3" /> GitHub
-                        </a>
-                      )}
-                      {selected.twitter && (
-                        <a href={selected.twitter} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 rounded-lg border border-cvsu-green/10 px-3 py-1.5 text-xs text-cvsu-green hover:bg-cvsu-light">
-                          <ExternalLink className="h-3 w-3" /> Twitter / X
-                        </a>
-                      )}
-                    </div>
-                  </div>
-                )}
-              </TabsContent>
-
-              <TabsContent value="education" className="space-y-4 pt-4">
-                <div className="grid grid-cols-2 gap-x-6 gap-y-3 text-sm">
-                  <div>
-                    <div className="text-xs text-cvsu-green/60 uppercase tracking-wider">Student number</div>
-                    <div className="flex items-center gap-1.5 text-cvsu-dark">
-                      <BookOpen className="h-3 w-3 text-cvsu-green/40" />
-                      {selected.student_number ?? "—"}
-                    </div>
-                  </div>
-                  <div>
-                    <div className="text-xs text-cvsu-green/60 uppercase tracking-wider">Course</div>
-                    <div className="text-cvsu-dark font-medium">{selected.course ?? "—"}</div>
-                  </div>
-                  <div>
-                    <div className="text-xs text-cvsu-green/60 uppercase tracking-wider">Batch</div>
-                    <div className="flex items-center gap-1.5 text-cvsu-dark">
-                      <Calendar className="h-3 w-3 text-cvsu-green/40" />
-                      {selected.batch ?? "—"}
-                    </div>
-                  </div>
-                  <div>
-                    <div className="text-xs text-cvsu-green/60 uppercase tracking-wider">Graduation year</div>
-                    <div className="flex items-center gap-1.5 text-cvsu-dark">
-                      <GraduationCap className="h-3 w-3 text-cvsu-green/40" />
-                      {selected.graduation_year ?? "—"}
-                    </div>
-                  </div>
-                </div>
-              </TabsContent>
-
-              <TabsContent value="work" className="space-y-4 pt-4">
-                {selected.careers.length === 0 ? (
-                  <div className="flex flex-col items-center gap-2 py-8 text-cvsu-green/40">
-                    <Briefcase className="h-8 w-8" />
-                    <p className="text-sm">No work experience recorded</p>
-                  </div>
-                ) : (
-                  <div className="space-y-3">
+            <ProfileCard profile={selected}>
+              {/* Careers section */}
+              {selected.careers.length > 0 && (
+                <div className="space-y-3">
+                  <h3 className="flex items-center gap-1.5 text-sm font-medium text-cvsu-dark">
+                    <Briefcase className="h-3.5 w-3.5 text-cvsu-green" />
+                    Work History
+                  </h3>
+                  <div className="space-y-2">
                     {selected.careers.map((c) => (
-                      <div key={c.id} className="rounded-lg border border-cvsu-green/10 p-4">
+                      <div key={c.id} className="rounded-lg border border-cvsu-green/10 p-3">
                         <div className="flex items-start justify-between">
                           <div>
                             <div className="flex items-center gap-2">
@@ -373,62 +226,12 @@ function AdminAlumniPage() {
                       </div>
                     ))}
                   </div>
-                )}
-              </TabsContent>
-
-              <TabsContent value="documents" className="space-y-4 pt-4">
-                <div className="grid gap-4 sm:grid-cols-2">
-                  <div className="rounded-lg border border-cvsu-green/10 p-4">
-                    <div className="flex items-center gap-2 text-sm font-medium text-cvsu-dark mb-2">
-                      <Upload className="h-4 w-4 text-cvsu-green" />
-                      Resume / CV
-                    </div>
-                    {selected.resume_url ? (
-                      <a
-                        href={selected.resume_url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center gap-1.5 text-sm text-cvsu-green hover:underline"
-                      >
-                        <FileText className="h-4 w-4" />
-                        View resume
-                        <ExternalLink className="h-3 w-3" />
-                      </a>
-                    ) : (
-                      <p className="text-sm text-cvsu-green/40">No resume uploaded</p>
-                    )}
-                  </div>
-                  <div className="rounded-lg border border-cvsu-green/10 p-4">
-                    <div className="flex items-center gap-2 text-sm font-medium text-cvsu-dark mb-2">
-                      <Upload className="h-4 w-4 text-cvsu-green" />
-                      Certificates ({selected.certificates?.length ?? 0})
-                    </div>
-                    {selected.certificates && selected.certificates.length > 0 ? (
-                      <div className="space-y-1">
-                        {selected.certificates.map((url, idx) => (
-                          <a
-                            key={idx}
-                            href={url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="flex items-center gap-1.5 text-sm text-cvsu-green hover:underline"
-                          >
-                            <FileText className="h-3.5 w-3.5" />
-                            Certificate {idx + 1}
-                            <ExternalLink className="h-3 w-3" />
-                          </a>
-                        ))}
-                      </div>
-                    ) : (
-                      <p className="text-sm text-cvsu-green/40">No certificates uploaded</p>
-                    )}
-                  </div>
                 </div>
-              </TabsContent>
-            </Tabs>
+              )}
 
+              {/* Verify/Reject */}
               {selected.verification_status !== "verified" && (
-                <div className="mt-6 flex items-center justify-between rounded-lg border border-cvsu-green/10 bg-cvsu-light p-4">
+                <div className="flex items-center justify-between rounded-lg border border-cvsu-green/10 bg-cvsu-light p-4">
                   <div className="text-sm text-cvsu-green/70">
                     {selected.verification_status === "rejected" ? "Alumni was rejected" : "Pending verification"}
                   </div>
@@ -457,9 +260,9 @@ function AdminAlumniPage() {
                   </div>
                 </div>
               )}
-            </>
+            </ProfileCard>
           )}
-          </DialogContent>
+        </DialogContent>
       </Dialog>
     </div>
   );

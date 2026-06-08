@@ -3,11 +3,18 @@ import { createFileRoute } from "@tanstack/react-router";
 import { supabase } from "@/lib/supabase";
 import type { Profile } from "@/lib/database.types";
 import AppLayout from "@/components/app-layout";
+import { ProfileCard } from "@/components/profile-card";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { Search, MapPin, GraduationCap, Users, Filter } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Search, MapPin, GraduationCap, Users, Filter, Eye } from "lucide-react";
 
 export const Route = createFileRoute("/directory")({
   component: DirectoryPage,
@@ -28,6 +35,8 @@ function DirectoryPage() {
   const [course, setCourse] = useState("All");
   const [batch, setBatch] = useState("All");
   const [location, setLocation] = useState("All");
+  const [selected, setSelected] = useState<Profile | null>(null);
+  const [viewOpen, setViewOpen] = useState(false);
 
   useEffect(() => {
     supabase.from("profiles").select("*").order("full_name").then(({ data }) => {
@@ -176,7 +185,8 @@ function DirectoryPage() {
             {filtered.map((alumni) => (
               <Card
                 key={alumni.id}
-                className="border-cvsu-green/10 shadow-sm transition hover:shadow-md"
+                className="border-cvsu-green/10 shadow-sm transition hover:shadow-md cursor-pointer"
+                onClick={() => { setSelected(alumni); setViewOpen(true); }}
               >
                 <CardContent className="p-5">
                   <div className="flex items-center gap-3">
@@ -189,10 +199,11 @@ function DirectoryPage() {
                       <h3 className="font-medium text-cvsu-dark">{alumni.full_name}</h3>
                       <p className="text-xs text-cvsu-green/60">{alumni.course} · Batch {alumni.batch}</p>
                     </div>
+                    <Eye className="h-4 w-4 text-cvsu-green/40 shrink-0" />
                   </div>
                   <div className="mt-3 flex items-center gap-2 text-xs text-cvsu-green/50">
                     <MapPin className="h-3 w-3" />
-                    {alumni.location}
+                    {alumni.location || "No location set"}
                   </div>
                   <div className="mt-3 flex items-center gap-2">
                     <Badge
@@ -209,7 +220,7 @@ function DirectoryPage() {
                                 : "bg-blue-100 text-blue-700"
                       }
                     >
-                      {alumni.employment_status?.replace("-", " ")}
+                      {alumni.employment_status?.replace("-", " ") || "No status"}
                     </Badge>
                   </div>
                 </CardContent>
@@ -217,6 +228,18 @@ function DirectoryPage() {
             ))}
           </div>
         )}
+
+        {/* Detail dialog */}
+        <Dialog open={viewOpen} onOpenChange={setViewOpen}>
+          <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle className="sr-only">Alumni Profile</DialogTitle>
+            </DialogHeader>
+            {selected && (
+              <ProfileCard profile={selected} />
+            )}
+          </DialogContent>
+        </Dialog>
       </div>
     </AppLayout>
   );
