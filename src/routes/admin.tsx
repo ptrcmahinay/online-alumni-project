@@ -7,7 +7,6 @@ import logo from "@/assets/logo.png";
 import {
   LayoutDashboard,
   Users,
-  BookOpen,
   Briefcase,
   Calendar,
   FileText,
@@ -29,7 +28,6 @@ export const Route = createFileRoute("/admin")({
 const navItems = [
   { icon: LayoutDashboard, label: "Dashboard", to: "/admin" },
   { icon: Users, label: "Alumni", to: "/admin/alumni" },
-  { icon: BookOpen, label: "Courses", to: "/admin/courses" },
   { icon: Briefcase, label: "Employment", to: "/admin/employment" },
   { icon: Calendar, label: "Events", to: "/admin/events" },
   { icon: FileText, label: "Job Posts", to: "/admin/jobs" },

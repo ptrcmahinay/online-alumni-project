@@ -27,7 +27,6 @@ import { Route as AdminUsersRouteImport } from './routes/admin.users'
 import { Route as AdminJobsRouteImport } from './routes/admin.jobs'
 import { Route as AdminEventsRouteImport } from './routes/admin.events'
 import { Route as AdminEmploymentRouteImport } from './routes/admin.employment'
-import { Route as AdminCoursesRouteImport } from './routes/admin.courses'
 import { Route as AdminAlumniRouteImport } from './routes/admin.alumni'
 
 const SettingsRoute = SettingsRouteImport.update({
@@ -120,11 +119,6 @@ const AdminEmploymentRoute = AdminEmploymentRouteImport.update({
   path: '/employment',
   getParentRoute: () => AdminRoute,
 } as any)
-const AdminCoursesRoute = AdminCoursesRouteImport.update({
-  id: '/courses',
-  path: '/courses',
-  getParentRoute: () => AdminRoute,
-} as any)
 const AdminAlumniRoute = AdminAlumniRouteImport.update({
   id: '/alumni',
   path: '/alumni',
@@ -146,7 +140,6 @@ export interface FileRoutesByFullPath {
   '/register': typeof RegisterRoute
   '/settings': typeof SettingsRoute
   '/admin/alumni': typeof AdminAlumniRoute
-  '/admin/courses': typeof AdminCoursesRoute
   '/admin/employment': typeof AdminEmploymentRoute
   '/admin/events': typeof AdminEventsRoute
   '/admin/jobs': typeof AdminJobsRoute
@@ -167,7 +160,6 @@ export interface FileRoutesByTo {
   '/register': typeof RegisterRoute
   '/settings': typeof SettingsRoute
   '/admin/alumni': typeof AdminAlumniRoute
-  '/admin/courses': typeof AdminCoursesRoute
   '/admin/employment': typeof AdminEmploymentRoute
   '/admin/events': typeof AdminEventsRoute
   '/admin/jobs': typeof AdminJobsRoute
@@ -190,7 +182,6 @@ export interface FileRoutesById {
   '/register': typeof RegisterRoute
   '/settings': typeof SettingsRoute
   '/admin/alumni': typeof AdminAlumniRoute
-  '/admin/courses': typeof AdminCoursesRoute
   '/admin/employment': typeof AdminEmploymentRoute
   '/admin/events': typeof AdminEventsRoute
   '/admin/jobs': typeof AdminJobsRoute
@@ -214,7 +205,6 @@ export interface FileRouteTypes {
     | '/register'
     | '/settings'
     | '/admin/alumni'
-    | '/admin/courses'
     | '/admin/employment'
     | '/admin/events'
     | '/admin/jobs'
@@ -235,7 +225,6 @@ export interface FileRouteTypes {
     | '/register'
     | '/settings'
     | '/admin/alumni'
-    | '/admin/courses'
     | '/admin/employment'
     | '/admin/events'
     | '/admin/jobs'
@@ -257,7 +246,6 @@ export interface FileRouteTypes {
     | '/register'
     | '/settings'
     | '/admin/alumni'
-    | '/admin/courses'
     | '/admin/employment'
     | '/admin/events'
     | '/admin/jobs'
@@ -409,13 +397,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminEmploymentRouteImport
       parentRoute: typeof AdminRoute
     }
-    '/admin/courses': {
-      id: '/admin/courses'
-      path: '/courses'
-      fullPath: '/admin/courses'
-      preLoaderRoute: typeof AdminCoursesRouteImport
-      parentRoute: typeof AdminRoute
-    }
     '/admin/alumni': {
       id: '/admin/alumni'
       path: '/alumni'
@@ -428,7 +409,6 @@ declare module '@tanstack/react-router' {
 
 interface AdminRouteChildren {
   AdminAlumniRoute: typeof AdminAlumniRoute
-  AdminCoursesRoute: typeof AdminCoursesRoute
   AdminEmploymentRoute: typeof AdminEmploymentRoute
   AdminEventsRoute: typeof AdminEventsRoute
   AdminJobsRoute: typeof AdminJobsRoute
@@ -438,7 +418,6 @@ interface AdminRouteChildren {
 
 const AdminRouteChildren: AdminRouteChildren = {
   AdminAlumniRoute: AdminAlumniRoute,
-  AdminCoursesRoute: AdminCoursesRoute,
   AdminEmploymentRoute: AdminEmploymentRoute,
   AdminEventsRoute: AdminEventsRoute,
   AdminJobsRoute: AdminJobsRoute,
