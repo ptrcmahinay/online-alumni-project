@@ -357,7 +357,7 @@ function ProfilePage() {
         </Card>
 
         <Tabs defaultValue="personal" className="space-y-6">
-          <TabsList className="border-cvsu-green/10 bg-white">
+          <TabsList className="w-full overflow-x-auto border-cvsu-green/10 bg-white">
             <TabsTrigger value="personal">Personal Info</TabsTrigger>
             <TabsTrigger value="education">Education</TabsTrigger>
             <TabsTrigger value="employment">Employment</TabsTrigger>

@@ -8,7 +8,6 @@ import {
   UserPlus,
   Briefcase,
   Calendar,
-  Gift,
   ArrowUp,
   ArrowDown,
   TrendingUp,
@@ -26,7 +25,6 @@ function AdminDashboardPage() {
     { label: "New Registrations", value: "0", change: "", icon: UserPlus, color: "text-cvsu-dark bg-cvsu-green/20", up: true },
     { label: "Employment Rate", value: "0%", change: "", icon: Briefcase, color: "text-cvsu-dark bg-cvsu-green/20", up: true },
     { label: "Upcoming Events", value: "0", change: "", icon: Calendar, color: "text-cvsu-dark bg-cvsu-green/20", up: true },
-    { label: "Donations", value: "₱0", change: "", icon: Gift, color: "text-cvsu-dark bg-cvsu-green/20", up: true },
   ]);
 
   const [recentActivity, setRecentActivity] = useState<{ user: string; action: string; time: string }[]>([]);
@@ -43,16 +41,13 @@ function AdminDashboardPage() {
 
   useEffect(() => {
     async function loadKpis() {
-      const [profilesRes, eventsRes, donationsRes] = await Promise.all([
+      const [profilesRes, eventsRes] = await Promise.all([
         supabase.from("profiles").select("*", { count: "exact", head: true }),
         supabase.from("events").select("*", { count: "exact", head: true }).eq("status", "upcoming"),
-        supabase.from("donations").select("amount"),
       ]);
 
       const total = profilesRes.count ?? 0;
       const eventsCount = eventsRes.count ?? 0;
-      const donations = donationsRes.data ?? [];
-      const totalDonations = donations.reduce((sum, d) => sum + (d.amount || 0), 0);
 
       setKpis([
         { label: "Total Alumni", value: String(total), change: "", icon: Users, color: "text-cvsu-dark bg-cvsu-green/20", up: true },
@@ -60,7 +55,6 @@ function AdminDashboardPage() {
         { label: "New Registrations", value: "—", change: "", icon: UserPlus, color: "text-cvsu-dark bg-cvsu-green/20", up: true },
         { label: "Employment Rate", value: "—", change: "", icon: Briefcase, color: "text-cvsu-dark bg-cvsu-green/20", up: true },
         { label: "Upcoming Events", value: String(eventsCount), change: "", icon: Calendar, color: "text-cvsu-dark bg-cvsu-green/20", up: true },
-        { label: "Donations", value: `₱${(totalDonations / 1000).toFixed(0)}K`, change: "", icon: Gift, color: "text-cvsu-dark bg-cvsu-green/20", up: true },
       ]);
     }
     loadKpis();

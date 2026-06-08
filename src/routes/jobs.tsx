@@ -220,7 +220,7 @@ function JobsPage() {
                 key={job.id}
                 className="border-cvsu-green/10 shadow-sm transition hover:shadow-md"
               >
-                <CardContent className="flex items-start gap-4 p-5">
+                <CardContent className="flex flex-col gap-4 p-5 sm:flex-row sm:items-start">
                   <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-cvsu-dark text-white">
                     <Building2 className="h-6 w-6" />
                   </div>
@@ -317,7 +317,7 @@ function JobsPage() {
           ) : (
             myPosts.map((job) => (
               <Card key={job.id} className="border-cvsu-green/10 shadow-sm transition hover:shadow-md">
-                <CardContent className="flex items-start gap-4 p-5">
+                <CardContent className="flex flex-col gap-4 p-5 sm:flex-row sm:items-start">
                   <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-cvsu-dark text-white">
                     <Building2 className="h-6 w-6" />
                   </div>

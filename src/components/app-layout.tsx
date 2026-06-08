@@ -18,9 +18,7 @@ import {
   Menu,
   X,
   ChevronDown,
-  Search,
   PanelLeftClose,
-  PanelLeft,
 } from "lucide-react";
 
 const navItems = [
@@ -159,14 +157,6 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
               </div>
             )}
           </div>
-          {/* Collapse toggle */}
-          <button
-            onClick={() => setCollapsed(!collapsed)}
-            className="mt-3 flex w-full items-center justify-center rounded-lg py-1.5 text-white/40 hover:bg-white/10 hover:text-white transition"
-            title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
-          >
-            {collapsed ? <PanelLeft className="h-4 w-4" /> : <PanelLeftClose className="h-4 w-4" />}
-          </button>
         </div>
       </aside>
 
@@ -181,14 +171,13 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
             >
               <Menu className="h-5 w-5" />
             </button>
-            {/* Search */}
-            <div className="relative hidden md:block">
-              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-cvsu-green/40" />
-              <input
-                placeholder="Search alumni..."
-                className="h-10 w-56 rounded-lg border border-cvsu-green/10 bg-cvsu-light pl-9 pr-4 text-sm outline-none focus:border-cvsu-green/30 lg:w-72"
-              />
-            </div>
+            <button
+              onClick={() => setCollapsed(!collapsed)}
+              className="hidden text-cvsu-green/60 hover:text-cvsu-dark lg:block"
+              title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+            >
+              <PanelLeftClose className="h-5 w-5" />
+            </button>
           </div>
 
           <div className="flex items-center gap-2">
