@@ -225,7 +225,7 @@ function JobsPage() {
                     <Building2 className="h-6 w-6" />
                   </div>
                   <div className="min-w-0 flex-1">
-                    <div className="flex items-start justify-between gap-2">
+                    <div className="flex flex-col gap-1 sm:flex-row sm:items-start sm:justify-between sm:gap-2">
                       <div>
                         <h3 className="font-medium text-cvsu-dark">{job.title}</h3>
                         <p className="text-sm text-cvsu-green/60">{job.company}</p>
@@ -234,10 +234,10 @@ function JobsPage() {
                         variant="secondary"
                         className={
                           job.type === "Full-time"
-                            ? "bg-cvsu-green/10 text-cvsu-green"
+                            ? "bg-cvsu-green/10 text-cvsu-green w-fit"
                             : job.type === "Freelance" || job.type === "Remote"
-                              ? "bg-cvsu-green/10 text-cvsu-dark"
-                              : "bg-blue-50 text-blue-600"
+                              ? "bg-cvsu-green/10 text-cvsu-dark w-fit"
+                              : "bg-blue-50 text-blue-600 w-fit"
                         }
                       >
                         {job.type}

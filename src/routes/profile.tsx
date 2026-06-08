@@ -1,8 +1,7 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { useAuth } from "@/lib/auth";
 import { supabase } from "@/lib/supabase";
-import { useUnsavedChanges, UnsavedChangesDialog } from "@/lib/unsaved-changes";
 import AppLayout from "@/components/app-layout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -28,7 +27,6 @@ import {
   Camera,
   FileText,
   Trash2,
-  AlertTriangle,
 } from "lucide-react";
 
 export const Route = createFileRoute("/profile")({
@@ -39,109 +37,35 @@ function getInitials(name: string) {
   return name.split(" ").map((n) => n[0]).join("").toUpperCase().slice(0, 2);
 }
 
-type FormFields = {
-  full_name: string;
-  student_number: string;
-  course: string;
-  batch: string;
-  graduation_year: string;
-  employment_status: string;
-  company: string;
-  position: string;
-  industry: string;
-  location: string;
-  phone: string;
-  bio: string;
-  website: string;
-  github: string;
-  twitter: string;
-  linkedin: string;
-};
-
-const EMPTY_FORM: FormFields = {
-  full_name: "",
-  student_number: "",
-  course: "",
-  batch: "",
-  graduation_year: "",
-  employment_status: "",
-  company: "",
-  position: "",
-  industry: "",
-  location: "",
-  phone: "",
-  bio: "",
-  website: "",
-  github: "",
-  twitter: "",
-  linkedin: "",
-};
-
-function formFromProfile(p: Record<string, any> | null | undefined): FormFields {
-  return {
-    full_name: p?.full_name || "",
-    student_number: p?.student_number || "",
-    course: p?.course || "",
-    batch: p?.batch || "",
-    graduation_year: p?.graduation_year || "",
-    employment_status: p?.employment_status || "",
-    company: p?.company || "",
-    position: p?.position || "",
-    industry: p?.industry || "",
-    location: p?.location || "",
-    phone: p?.phone || "",
-    bio: p?.bio || "",
-    website: p?.website || "",
-    github: p?.github || "",
-    twitter: p?.twitter || "",
-    linkedin: p?.linkedin || "",
-  };
-}
-
 function ProfilePage() {
-  const { user, profile, isAdmin, refreshProfile } = useAuth();
-  const { setDirty } = useUnsavedChanges();
+  const { user, profile, isAdmin } = useAuth();
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
-  const [pendingAvatar, setPendingAvatar] = useState<File | null>(null);
-  const [pendingResume, setPendingResume] = useState<File | null>(null);
-  const [pendingCerts, setPendingCerts] = useState<File[]>([]);
+  const [uploadingAvatar, setUploadingAvatar] = useState(false);
+  const [uploadingResume, setUploadingResume] = useState(false);
+  const [uploadingCert, setUploadingCert] = useState(false);
   const avatarInputRef = useRef<HTMLInputElement>(null);
   const resumeInputRef = useRef<HTMLInputElement>(null);
   const certInputRef = useRef<HTMLInputElement>(null);
-  const originalRef = useRef<FormFields>(EMPTY_FORM);
-  const pendingAvatarUrl = useRef<string | null>(null);
 
-  useEffect(() => {
-    return () => {
-      if (pendingAvatarUrl.current) URL.revokeObjectURL(pendingAvatarUrl.current);
-    };
-  }, []);
-
-  const [form, setForm] = useState<FormFields>(() => formFromProfile(profile));
-
-  useEffect(() => {
-    const f = formFromProfile(profile);
-    setForm(f);
-    originalRef.current = f;
-    setDirty(false);
-  }, [profile]);
-
-  const isDirty = Object.keys(form).some(
-    (k) => (form as any)[k] !== (originalRef.current as any)[k],
-  );
-
-  useEffect(() => {
-    setDirty(isDirty);
-  }, [isDirty, setDirty]);
-
-  useEffect(() => {
-    if (isDirty) {
-      const handler = (e: BeforeUnloadEvent) => { e.preventDefault(); e.returnValue = ""; };
-      window.addEventListener("beforeunload", handler);
-      return () => window.removeEventListener("beforeunload", handler);
-    }
-  }, [isDirty]);
+  const [form, setForm] = useState({
+    full_name: profile?.full_name || "",
+    student_number: profile?.student_number || "",
+    course: profile?.course || "",
+    batch: profile?.batch || "",
+    graduation_year: profile?.graduation_year || "",
+    employment_status: profile?.employment_status || "",
+    company: profile?.company || "",
+    position: profile?.position || "",
+    industry: profile?.industry || "",
+    location: profile?.location || "",
+    phone: profile?.phone || "",
+    bio: profile?.bio || "",
+    website: profile?.website || "",
+    github: profile?.github || "",
+    twitter: profile?.twitter || "",
+    linkedin: profile?.linkedin || "",
+  });
 
   const initials = getInitials(profile?.full_name || user?.email || "U");
 
@@ -152,7 +76,7 @@ function ProfilePage() {
 
   async function handleSave() {
     setSaving(true);
-    const { error } = await supabase
+    await supabase
       .from("profiles")
       .update({
         full_name: form.full_name,
@@ -173,85 +97,52 @@ function ProfilePage() {
         linkedin: form.linkedin || null,
       })
       .eq("id", user!.id);
-    if (error) { setSaving(false); return; }
-
-    // upload pending files
-    const uploads: Promise<void>[] = [];
-    if (pendingAvatar) {
-      uploads.push(
-        (async () => {
-          const ext = pendingAvatar.name.split(".").pop();
-          const path = `${user!.id}/avatar.${ext}`;
-          await supabase.storage.from("avatars").upload(path, pendingAvatar, { upsert: true });
-          const { data: urlData } = supabase.storage.from("avatars").getPublicUrl(path);
-          await supabase.from("profiles").update({ avatar_url: urlData.publicUrl }).eq("id", user!.id);
-        })(),
-      );
-    }
-    if (pendingResume) {
-      uploads.push(
-        (async () => {
-          const ext = pendingResume.name.split(".").pop();
-          const path = `${user!.id}/resume.${ext}`;
-          await supabase.storage.from("documents").upload(path, pendingResume, { upsert: true });
-          const { data: urlData } = supabase.storage.from("documents").getPublicUrl(path);
-          await supabase.from("profiles").update({ resume_url: urlData.publicUrl }).eq("id", user!.id);
-        })(),
-      );
-    }
-    if (pendingCerts.length) {
-      uploads.push(
-        (async () => {
-          const currentCerts = (profile?.certificates as string[]) || [];
-          const newUrls: string[] = [];
-          for (const file of pendingCerts) {
-            const path = `${user!.id}/certs/${Date.now()}-${file.name}`;
-            await supabase.storage.from("documents").upload(path, file, { upsert: true });
-            const { data: urlData } = supabase.storage.from("documents").getPublicUrl(path);
-            newUrls.push(urlData.publicUrl);
-          }
-          await supabase
-            .from("profiles")
-            .update({ certificates: [...currentCerts, ...newUrls] })
-            .eq("id", user!.id);
-        })(),
-      );
-    }
-    await Promise.all(uploads);
-
     setSaving(false);
-    originalRef.current = { ...form };
-    setDirty(false);
     setSaved(true);
-    setPendingAvatar(null);
-    setPendingResume(null);
-    setPendingCerts([]);
-    if (pendingAvatarUrl.current) { URL.revokeObjectURL(pendingAvatarUrl.current); pendingAvatarUrl.current = null; }
-    refreshProfile();
     setTimeout(() => setSaved(false), 3000);
   }
 
-  function handleAvatarSelect(e: React.ChangeEvent<HTMLInputElement>) {
+  async function handleAvatarUpload(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (!file) return;
-    if (pendingAvatarUrl.current) URL.revokeObjectURL(pendingAvatarUrl.current);
-    pendingAvatarUrl.current = URL.createObjectURL(file);
-    setPendingAvatar(file);
-    setSaved(false);
+    setUploadingAvatar(true);
+    const ext = file.name.split(".").pop();
+    const path = `${user!.id}/avatar.${ext}`;
+    await supabase.storage.from("avatars").upload(path, file, { upsert: true });
+    const { data: urlData } = supabase.storage.from("avatars").getPublicUrl(path);
+    await supabase.from("profiles").update({ avatar_url: urlData.publicUrl }).eq("id", user!.id);
+    setUploadingAvatar(false);
   }
 
-  function handleResumeSelect(e: React.ChangeEvent<HTMLInputElement>) {
+  async function handleResumeUpload(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (!file) return;
-    setPendingResume(file);
-    setSaved(false);
+    setUploadingResume(true);
+    const ext = file.name.split(".").pop();
+    const path = `${user!.id}/resume.${ext}`;
+    await supabase.storage.from("documents").upload(path, file, { upsert: true });
+    const { data: urlData } = supabase.storage.from("documents").getPublicUrl(path);
+    await supabase.from("profiles").update({ resume_url: urlData.publicUrl }).eq("id", user!.id);
+    setUploadingResume(false);
   }
 
-  function handleCertSelect(e: React.ChangeEvent<HTMLInputElement>) {
+  async function handleCertUpload(e: React.ChangeEvent<HTMLInputElement>) {
     const files = e.target.files;
     if (!files?.length) return;
-    setPendingCerts((prev) => [...prev, ...Array.from(files)]);
-    setSaved(false);
+    setUploadingCert(true);
+    const currentCerts = (profile?.certificates as string[]) || [];
+    const newUrls: string[] = [];
+    for (const file of files) {
+      const path = `${user!.id}/certs/${Date.now()}-${file.name}`;
+      await supabase.storage.from("documents").upload(path, file, { upsert: true });
+      const { data: urlData } = supabase.storage.from("documents").getPublicUrl(path);
+      newUrls.push(urlData.publicUrl);
+    }
+    await supabase
+      .from("profiles")
+      .update({ certificates: [...currentCerts, ...newUrls] })
+      .eq("id", user!.id);
+    setUploadingCert(false);
   }
 
   return (
@@ -262,44 +153,11 @@ function ProfilePage() {
           <p className="mt-1 text-sm text-cvsu-green/60">Manage your alumni profile information</p>
         </div>
 
-        {isDirty && (
-          <div className="flex items-center gap-3 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
-            <AlertTriangle className="h-4 w-4 shrink-0" />
-            <span className="flex-1">You have unsaved changes.</span>
-            <Button
-              size="sm"
-              variant="outline"
-              onClick={() => {
-                setForm({ ...originalRef.current });
-                setDirty(false);
-                setPendingAvatar(null);
-                setPendingResume(null);
-                setPendingCerts([]);
-                if (pendingAvatarUrl.current) { URL.revokeObjectURL(pendingAvatarUrl.current); pendingAvatarUrl.current = null; }
-              }}
-              className="h-7 border-amber-200 text-xs"
-            >
-              Discard
-            </Button>
-            <Button
-              size="sm"
-              onClick={handleSave}
-              disabled={saving}
-              className="h-7 bg-cvsu-dark text-xs text-white hover:bg-cvsu-green"
-            >
-              {saving ? <Loader2 className="h-3 w-3 animate-spin" /> : null}
-              Save
-            </Button>
-          </div>
-        )}
-
         <Card className="border-cvsu-green/10 shadow-sm">
           <CardContent className="flex flex-col items-center gap-4 p-6 sm:flex-row sm:items-start">
             <div className="relative">
               <Avatar className="h-20 w-20 sm:h-24 sm:w-24">
-                {pendingAvatarUrl.current ? (
-                  <AvatarImage src={pendingAvatarUrl.current} alt="preview" />
-                ) : profile?.avatar_url ? (
+                {profile?.avatar_url ? (
                   <AvatarImage src={profile.avatar_url} alt={profile.full_name} />
                 ) : null}
                 <AvatarFallback className="bg-cvsu-dark text-2xl text-white">
@@ -311,13 +169,18 @@ function ProfilePage() {
                 type="file"
                 accept="image/*"
                 className="hidden"
-                onChange={handleAvatarSelect}
+                onChange={handleAvatarUpload}
               />
               <button
                 onClick={() => avatarInputRef.current?.click()}
+                disabled={uploadingAvatar}
                 className="absolute bottom-0 right-0 flex h-7 w-7 items-center justify-center rounded-full bg-cvsu-green text-white shadow-sm"
               >
-                <Camera className="h-3.5 w-3.5" />
+                {uploadingAvatar ? (
+                  <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                ) : (
+                  <Camera className="h-3.5 w-3.5" />
+                )}
               </button>
             </div>
             <div className="text-center sm:text-left">
@@ -622,31 +485,22 @@ function ProfilePage() {
                   <Upload className="mx-auto h-8 w-8 text-cvsu-green/40" />
                   <p className="mt-2 text-sm font-medium text-cvsu-dark">Resume / CV</p>
                   <p className="text-xs text-cvsu-green/60">PDF format, max 5MB</p>
-                  {profile?.resume_url || pendingResume ? (
-                    <div className="mt-3 flex flex-col items-center gap-2">
-                      {profile?.resume_url && (
-                        <a
-                          href={profile.resume_url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="flex items-center gap-1 text-sm text-cvsu-green hover:underline"
-                        >
-                          <FileText className="h-4 w-4" />
-                          View resume
-                        </a>
-                      )}
-                      {pendingResume && (
-                        <span className="flex items-center gap-1 text-sm text-amber-600">
-                          <FileText className="h-4 w-4" />
-                          New: {pendingResume.name}
-                        </span>
-                      )}
+                  {profile?.resume_url ? (
+                    <div className="mt-3 flex items-center justify-center gap-2">
+                      <a
+                        href={profile.resume_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-1 text-sm text-cvsu-green hover:underline"
+                      >
+                        <FileText className="h-4 w-4" />
+                        View resume
+                      </a>
                       <Button
                         variant="ghost"
                         size="sm"
                         className="h-7 text-red-500"
                         onClick={async () => {
-                          setPendingResume(null);
                           await supabase.from("profiles").update({ resume_url: null }).eq("id", user!.id);
                         }}
                       >
@@ -660,14 +514,18 @@ function ProfilePage() {
                         type="file"
                         accept=".pdf"
                         className="hidden"
-                        onChange={handleResumeSelect}
+                        onChange={handleResumeUpload}
                       />
                       <Button
                         variant="outline"
                         size="sm"
                         className="mt-3 border-cvsu-green/20"
                         onClick={() => resumeInputRef.current?.click()}
+                        disabled={uploadingResume}
                       >
+                        {uploadingResume ? (
+                          <Loader2 className="mr-1 h-3.5 w-3.5 animate-spin" />
+                        ) : null}
                         Choose file
                       </Button>
                     </>
@@ -677,9 +535,9 @@ function ProfilePage() {
                   <Upload className="mx-auto h-8 w-8 text-cvsu-green/40" />
                   <p className="mt-2 text-sm font-medium text-cvsu-dark">Certificates</p>
                   <p className="text-xs text-cvsu-green/60">PDF or image, max 10MB each</p>
-                  {(profile?.certificates && (profile.certificates as string[]).length > 0) || pendingCerts.length > 0 ? (
+                  {profile?.certificates && (profile.certificates as string[]).length > 0 ? (
                     <div className="mt-3 space-y-1">
-                      {(profile?.certificates as string[] | undefined)?.map((url, idx) => (
+                      {(profile.certificates as string[]).map((url, idx) => (
                         <div key={idx} className="flex items-center justify-center gap-2">
                           <a
                             href={url}
@@ -695,7 +553,6 @@ function ProfilePage() {
                             size="sm"
                             className="h-7 text-red-500"
                             onClick={async () => {
-                              if (!profile?.certificates) return;
                               const updated = [...(profile.certificates as string[])];
                               updated.splice(idx, 1);
                               await supabase.from("profiles").update({ certificates: updated }).eq("id", user!.id);
@@ -703,14 +560,6 @@ function ProfilePage() {
                           >
                             <Trash2 className="h-3.5 w-3.5" />
                           </Button>
-                        </div>
-                      ))}
-                      {pendingCerts.map((f, idx) => (
-                        <div key={`pending-${idx}`} className="flex items-center justify-center gap-2">
-                          <span className="flex items-center gap-1 text-sm text-amber-600">
-                            <FileText className="h-4 w-4" />
-                            New: {f.name}
-                          </span>
                         </div>
                       ))}
                     </div>
@@ -721,14 +570,18 @@ function ProfilePage() {
                     accept=".pdf,image/*"
                     multiple
                     className="hidden"
-                    onChange={handleCertSelect}
+                    onChange={handleCertUpload}
                   />
                   <Button
                     variant="outline"
                     size="sm"
                     className="mt-3 border-cvsu-green/20"
                     onClick={() => certInputRef.current?.click()}
+                    disabled={uploadingCert}
                   >
+                    {uploadingCert ? (
+                      <Loader2 className="mr-1 h-3.5 w-3.5 animate-spin" />
+                    ) : null}
                     {profile?.certificates && (profile.certificates as string[]).length > 0 ? "Add more" : "Choose files"}
                   </Button>
                 </div>
@@ -736,27 +589,22 @@ function ProfilePage() {
             </Card>
           </TabsContent>
         </Tabs>
-      </div>
 
-      <div className="sticky bottom-0 flex items-center justify-end gap-3 rounded-lg border border-cvsu-green/10 bg-white p-4 shadow-sm">
-        {saved && (
-          <span className="text-sm text-cvsu-green">Saved successfully!</span>
-        )}
-        <Button
-          onClick={handleSave}
-          disabled={saving}
-          className="gap-2 bg-cvsu-dark text-white hover:bg-cvsu-green"
-        >
-          {saving ? (
-            <Loader2 className="h-4 w-4 animate-spin" />
-          ) : (
-            <Save className="h-4 w-4" />
-          )}
-          {saved ? "Saved!" : "Save changes"}
-        </Button>
+        <div className="sticky bottom-0 -mx-4 flex items-center justify-end gap-3 border-t border-cvsu-green/10 bg-white px-4 py-3 shadow-sm lg:-mx-6 lg:px-6">
+          <Button
+            onClick={handleSave}
+            disabled={saving}
+            className="gap-2 bg-cvsu-dark text-white hover:bg-cvsu-green"
+          >
+            {saving ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : (
+              <Save className="h-4 w-4" />
+            )}
+            {saved ? "Saved!" : "Save changes"}
+          </Button>
+        </div>
       </div>
-
-      <UnsavedChangesDialog onSave={handleSave} onDiscard={() => {}} />
     </AppLayout>
   );
 }
