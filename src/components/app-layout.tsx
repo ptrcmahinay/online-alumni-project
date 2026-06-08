@@ -95,7 +95,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 
       {/* Sidebar */}
       <aside
-        className={`fixed inset-y-0 left-0 z-50 flex flex-col border-r border-white/10 bg-cvsu-dark transition-all duration-300 lg:translate-x-0 ${
+        className={`fixed inset-y-0 left-0 z-50 flex flex-col justify-between border-r border-white/10 bg-cvsu-dark transition-all duration-300 lg:translate-x-0 ${
           collapsed ? "w-16" : "w-64"
         } ${
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
@@ -120,7 +120,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         </div>
 
         {/* Nav */}
-        <nav className="flex-1 overflow-y-auto p-4">
+        <nav className="overflow-y-auto p-4">
           <div className="space-y-1">
             {navItems.map((item) => {
               const active = location.pathname === item.to;

@@ -154,7 +154,7 @@ function Landing() {
         </div>
       </header>
 
-      <section className="relative flex min-h-screen items-start justify-center overflow-hidden pt-28"
+      <section className="relative flex min-h-screen items-center justify-center overflow-hidden"
         style={{ backgroundImage: `url(${schoolBg})`, backgroundSize: "cover", backgroundPosition: "center" }}
       >
         <div className="absolute inset-0 bg-gradient-to-b from-cvsu-dark/70 to-cvsu-green/90" />
