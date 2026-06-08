@@ -9,38 +9,388 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SettingsRouteImport } from './routes/settings'
+import { Route as RegisterRouteImport } from './routes/register'
+import { Route as ProfileRouteImport } from './routes/profile'
+import { Route as NotificationsRouteImport } from './routes/notifications'
+import { Route as LoginRouteImport } from './routes/login'
+import { Route as JobsRouteImport } from './routes/jobs'
+import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
+import { Route as EventsRouteImport } from './routes/events'
+import { Route as EmploymentRouteImport } from './routes/employment'
+import { Route as DirectoryRouteImport } from './routes/directory'
+import { Route as DashboardRouteImport } from './routes/dashboard'
+import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AdminIndexRouteImport } from './routes/admin.index'
+import { Route as AdminUsersRouteImport } from './routes/admin.users'
+import { Route as AdminNotificationsRouteImport } from './routes/admin.notifications'
+import { Route as AdminJobsRouteImport } from './routes/admin.jobs'
+import { Route as AdminEventsRouteImport } from './routes/admin.events'
+import { Route as AdminEmploymentRouteImport } from './routes/admin.employment'
+import { Route as AdminCoursesRouteImport } from './routes/admin.courses'
+import { Route as AdminAnnouncementsRouteImport } from './routes/admin.announcements'
+import { Route as AdminAlumniRouteImport } from './routes/admin.alumni'
 
+const SettingsRoute = SettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RegisterRoute = RegisterRouteImport.update({
+  id: '/register',
+  path: '/register',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProfileRoute = ProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const NotificationsRoute = NotificationsRouteImport.update({
+  id: '/notifications',
+  path: '/notifications',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const JobsRoute = JobsRouteImport.update({
+  id: '/jobs',
+  path: '/jobs',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ForgotPasswordRoute = ForgotPasswordRouteImport.update({
+  id: '/forgot-password',
+  path: '/forgot-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EventsRoute = EventsRouteImport.update({
+  id: '/events',
+  path: '/events',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EmploymentRoute = EmploymentRouteImport.update({
+  id: '/employment',
+  path: '/employment',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DirectoryRoute = DirectoryRouteImport.update({
+  id: '/directory',
+  path: '/directory',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DashboardRoute = DashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminIndexRoute = AdminIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminUsersRoute = AdminUsersRouteImport.update({
+  id: '/users',
+  path: '/users',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminNotificationsRoute = AdminNotificationsRouteImport.update({
+  id: '/notifications',
+  path: '/notifications',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminJobsRoute = AdminJobsRouteImport.update({
+  id: '/jobs',
+  path: '/jobs',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminEventsRoute = AdminEventsRouteImport.update({
+  id: '/events',
+  path: '/events',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminEmploymentRoute = AdminEmploymentRouteImport.update({
+  id: '/employment',
+  path: '/employment',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminCoursesRoute = AdminCoursesRouteImport.update({
+  id: '/courses',
+  path: '/courses',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminAnnouncementsRoute = AdminAnnouncementsRouteImport.update({
+  id: '/announcements',
+  path: '/announcements',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminAlumniRoute = AdminAlumniRouteImport.update({
+  id: '/alumni',
+  path: '/alumni',
+  getParentRoute: () => AdminRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRouteWithChildren
+  '/dashboard': typeof DashboardRoute
+  '/directory': typeof DirectoryRoute
+  '/employment': typeof EmploymentRoute
+  '/events': typeof EventsRoute
+  '/forgot-password': typeof ForgotPasswordRoute
+  '/jobs': typeof JobsRoute
+  '/login': typeof LoginRoute
+  '/notifications': typeof NotificationsRoute
+  '/profile': typeof ProfileRoute
+  '/register': typeof RegisterRoute
+  '/settings': typeof SettingsRoute
+  '/admin/alumni': typeof AdminAlumniRoute
+  '/admin/announcements': typeof AdminAnnouncementsRoute
+  '/admin/courses': typeof AdminCoursesRoute
+  '/admin/employment': typeof AdminEmploymentRoute
+  '/admin/events': typeof AdminEventsRoute
+  '/admin/jobs': typeof AdminJobsRoute
+  '/admin/notifications': typeof AdminNotificationsRoute
+  '/admin/users': typeof AdminUsersRoute
+  '/admin/': typeof AdminIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/dashboard': typeof DashboardRoute
+  '/directory': typeof DirectoryRoute
+  '/employment': typeof EmploymentRoute
+  '/events': typeof EventsRoute
+  '/forgot-password': typeof ForgotPasswordRoute
+  '/jobs': typeof JobsRoute
+  '/login': typeof LoginRoute
+  '/notifications': typeof NotificationsRoute
+  '/profile': typeof ProfileRoute
+  '/register': typeof RegisterRoute
+  '/settings': typeof SettingsRoute
+  '/admin/alumni': typeof AdminAlumniRoute
+  '/admin/announcements': typeof AdminAnnouncementsRoute
+  '/admin/courses': typeof AdminCoursesRoute
+  '/admin/employment': typeof AdminEmploymentRoute
+  '/admin/events': typeof AdminEventsRoute
+  '/admin/jobs': typeof AdminJobsRoute
+  '/admin/notifications': typeof AdminNotificationsRoute
+  '/admin/users': typeof AdminUsersRoute
+  '/admin': typeof AdminIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/admin': typeof AdminRouteWithChildren
+  '/dashboard': typeof DashboardRoute
+  '/directory': typeof DirectoryRoute
+  '/employment': typeof EmploymentRoute
+  '/events': typeof EventsRoute
+  '/forgot-password': typeof ForgotPasswordRoute
+  '/jobs': typeof JobsRoute
+  '/login': typeof LoginRoute
+  '/notifications': typeof NotificationsRoute
+  '/profile': typeof ProfileRoute
+  '/register': typeof RegisterRoute
+  '/settings': typeof SettingsRoute
+  '/admin/alumni': typeof AdminAlumniRoute
+  '/admin/announcements': typeof AdminAnnouncementsRoute
+  '/admin/courses': typeof AdminCoursesRoute
+  '/admin/employment': typeof AdminEmploymentRoute
+  '/admin/events': typeof AdminEventsRoute
+  '/admin/jobs': typeof AdminJobsRoute
+  '/admin/notifications': typeof AdminNotificationsRoute
+  '/admin/users': typeof AdminUsersRoute
+  '/admin/': typeof AdminIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/admin'
+    | '/dashboard'
+    | '/directory'
+    | '/employment'
+    | '/events'
+    | '/forgot-password'
+    | '/jobs'
+    | '/login'
+    | '/notifications'
+    | '/profile'
+    | '/register'
+    | '/settings'
+    | '/admin/alumni'
+    | '/admin/announcements'
+    | '/admin/courses'
+    | '/admin/employment'
+    | '/admin/events'
+    | '/admin/jobs'
+    | '/admin/notifications'
+    | '/admin/users'
+    | '/admin/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/dashboard'
+    | '/directory'
+    | '/employment'
+    | '/events'
+    | '/forgot-password'
+    | '/jobs'
+    | '/login'
+    | '/notifications'
+    | '/profile'
+    | '/register'
+    | '/settings'
+    | '/admin/alumni'
+    | '/admin/announcements'
+    | '/admin/courses'
+    | '/admin/employment'
+    | '/admin/events'
+    | '/admin/jobs'
+    | '/admin/notifications'
+    | '/admin/users'
+    | '/admin'
+  id:
+    | '__root__'
+    | '/'
+    | '/admin'
+    | '/dashboard'
+    | '/directory'
+    | '/employment'
+    | '/events'
+    | '/forgot-password'
+    | '/jobs'
+    | '/login'
+    | '/notifications'
+    | '/profile'
+    | '/register'
+    | '/settings'
+    | '/admin/alumni'
+    | '/admin/announcements'
+    | '/admin/courses'
+    | '/admin/employment'
+    | '/admin/events'
+    | '/admin/jobs'
+    | '/admin/notifications'
+    | '/admin/users'
+    | '/admin/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AdminRoute: typeof AdminRouteWithChildren
+  DashboardRoute: typeof DashboardRoute
+  DirectoryRoute: typeof DirectoryRoute
+  EmploymentRoute: typeof EmploymentRoute
+  EventsRoute: typeof EventsRoute
+  ForgotPasswordRoute: typeof ForgotPasswordRoute
+  JobsRoute: typeof JobsRoute
+  LoginRoute: typeof LoginRoute
+  NotificationsRoute: typeof NotificationsRoute
+  ProfileRoute: typeof ProfileRoute
+  RegisterRoute: typeof RegisterRoute
+  SettingsRoute: typeof SettingsRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/settings': {
+      id: '/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof SettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/register': {
+      id: '/register'
+      path: '/register'
+      fullPath: '/register'
+      preLoaderRoute: typeof RegisterRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/profile': {
+      id: '/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof ProfileRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/notifications': {
+      id: '/notifications'
+      path: '/notifications'
+      fullPath: '/notifications'
+      preLoaderRoute: typeof NotificationsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/jobs': {
+      id: '/jobs'
+      path: '/jobs'
+      fullPath: '/jobs'
+      preLoaderRoute: typeof JobsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/forgot-password': {
+      id: '/forgot-password'
+      path: '/forgot-password'
+      fullPath: '/forgot-password'
+      preLoaderRoute: typeof ForgotPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/events': {
+      id: '/events'
+      path: '/events'
+      fullPath: '/events'
+      preLoaderRoute: typeof EventsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/employment': {
+      id: '/employment'
+      path: '/employment'
+      fullPath: '/employment'
+      preLoaderRoute: typeof EmploymentRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/directory': {
+      id: '/directory'
+      path: '/directory'
+      fullPath: '/directory'
+      preLoaderRoute: typeof DirectoryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dashboard': {
+      id: '/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof DashboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -48,11 +398,112 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/': {
+      id: '/admin/'
+      path: '/'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AdminIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/users': {
+      id: '/admin/users'
+      path: '/users'
+      fullPath: '/admin/users'
+      preLoaderRoute: typeof AdminUsersRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/notifications': {
+      id: '/admin/notifications'
+      path: '/notifications'
+      fullPath: '/admin/notifications'
+      preLoaderRoute: typeof AdminNotificationsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/jobs': {
+      id: '/admin/jobs'
+      path: '/jobs'
+      fullPath: '/admin/jobs'
+      preLoaderRoute: typeof AdminJobsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/events': {
+      id: '/admin/events'
+      path: '/events'
+      fullPath: '/admin/events'
+      preLoaderRoute: typeof AdminEventsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/employment': {
+      id: '/admin/employment'
+      path: '/employment'
+      fullPath: '/admin/employment'
+      preLoaderRoute: typeof AdminEmploymentRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/courses': {
+      id: '/admin/courses'
+      path: '/courses'
+      fullPath: '/admin/courses'
+      preLoaderRoute: typeof AdminCoursesRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/announcements': {
+      id: '/admin/announcements'
+      path: '/announcements'
+      fullPath: '/admin/announcements'
+      preLoaderRoute: typeof AdminAnnouncementsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/alumni': {
+      id: '/admin/alumni'
+      path: '/alumni'
+      fullPath: '/admin/alumni'
+      preLoaderRoute: typeof AdminAlumniRouteImport
+      parentRoute: typeof AdminRoute
+    }
   }
 }
 
+interface AdminRouteChildren {
+  AdminAlumniRoute: typeof AdminAlumniRoute
+  AdminAnnouncementsRoute: typeof AdminAnnouncementsRoute
+  AdminCoursesRoute: typeof AdminCoursesRoute
+  AdminEmploymentRoute: typeof AdminEmploymentRoute
+  AdminEventsRoute: typeof AdminEventsRoute
+  AdminJobsRoute: typeof AdminJobsRoute
+  AdminNotificationsRoute: typeof AdminNotificationsRoute
+  AdminUsersRoute: typeof AdminUsersRoute
+  AdminIndexRoute: typeof AdminIndexRoute
+}
+
+const AdminRouteChildren: AdminRouteChildren = {
+  AdminAlumniRoute: AdminAlumniRoute,
+  AdminAnnouncementsRoute: AdminAnnouncementsRoute,
+  AdminCoursesRoute: AdminCoursesRoute,
+  AdminEmploymentRoute: AdminEmploymentRoute,
+  AdminEventsRoute: AdminEventsRoute,
+  AdminJobsRoute: AdminJobsRoute,
+  AdminNotificationsRoute: AdminNotificationsRoute,
+  AdminUsersRoute: AdminUsersRoute,
+  AdminIndexRoute: AdminIndexRoute,
+}
+
+const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AdminRoute: AdminRouteWithChildren,
+  DashboardRoute: DashboardRoute,
+  DirectoryRoute: DirectoryRoute,
+  EmploymentRoute: EmploymentRoute,
+  EventsRoute: EventsRoute,
+  ForgotPasswordRoute: ForgotPasswordRoute,
+  JobsRoute: JobsRoute,
+  LoginRoute: LoginRoute,
+  NotificationsRoute: NotificationsRoute,
+  ProfileRoute: ProfileRoute,
+  RegisterRoute: RegisterRoute,
+  SettingsRoute: SettingsRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

@@ -1,0 +1,3 @@
+ALTER TABLE opportunities ADD COLUMN IF NOT EXISTS email TEXT;
+ALTER TABLE opportunities ADD COLUMN IF NOT EXISTS salary_range TEXT;
+ALTER TABLE opportunities ADD COLUMN IF NOT EXISTS hybrid BOOLEAN DEFAULT false;

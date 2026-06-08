@@ -1,4 +1,6 @@
 import { Link, createFileRoute } from "@tanstack/react-router";
+import { useState, useEffect } from "react";
+import { supabase } from "@/lib/supabase";
 import { FadeIn } from "@/components/fade-in";
 import { Button } from "@/components/ui/button";
 import {
@@ -20,6 +22,7 @@ import faithImg from "@/assets/faith.jpg";
 import patImg from "@/assets/pat-about.png";
 import sannyImg from "@/assets/sanny-about.png";
 import xtImg from "@/assets/xt-about.png";
+import logo from "@/assets/logo.png";
 
 
 export const Route = createFileRoute("/")({
@@ -37,23 +40,23 @@ export const Route = createFileRoute("/")({
 });
 
 const developers = [
+    {
+    name: "Patricia Ann C. Mahinay",
+    role: "Lead Developer",
+    img: patImg,
+  },
   {
-    name: "Faith",
+    name: "Faith Tomelden",
     role: "Lead Developer",
     img: faithImg,
   },
   {
-    name: "Pat",
-    role: "Frontend Developer",
-    img: patImg,
-  },
-  {
-    name: "Sanny",
+    name: "Sanny Gine V. Patan-Patan",
     role: "Backend Developer",
     img: sannyImg,
   },
   {
-    name: "Xt",
+    name: "Cristene C. Rios",
     role: "UI/UX Designer",
     img: xtImg,
   },
@@ -83,19 +86,39 @@ const features = [
 ];
 
 function Landing() {
+  const [stats, setStats] = useState({ alumni: "—", batches: "—", partners: "—" });
+
+  useEffect(() => {
+    async function load() {
+      const [profilesRes, oppRes] = await Promise.all([
+        supabase.from("profiles").select("*", { count: "exact", head: true }),
+        supabase.from("opportunities").select("*", { count: "exact", head: true }),
+      ]);
+      const total = profilesRes.count ?? 0;
+      const { data: batches } = await supabase.from("profiles").select("batch").not("batch", "is", null);
+      const batchCount = batches ? new Set(batches.map((b) => b.batch)).size : 0;
+      setStats({
+        alumni: total > 0 ? `${total.toLocaleString()}+` : "—",
+        batches: batchCount > 0 ? `${batchCount}+` : "—",
+        partners: `${(oppRes.count ?? 0) > 0 ? (oppRes.count ?? 0) : "—"}+`,
+      });
+    }
+    load();
+  }, []);
+
   return (
     <div className="flex min-h-screen flex-col">
       <header className="fixed top-0 right-0 left-0 z-50 border-b border-white/10 bg-cvsu-dark/80 backdrop-blur-md">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-3">
           <Link to="/" className="flex items-center gap-2.5">
-            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-cvsu-dark text-white">
-              <GraduationCap className="h-5 w-5" />
+            <div className="flex h-9 w-9 items-center justify-center rounded-lg text-white">
+              <img src={logo} alt="logo" />
             </div>
             <div className="leading-tight text-white">
               <div className="text-sm font-semibold tracking-tight">
                 CvSU Naic
               </div>
-              <div className="text-[10px] uppercase tracking-[0.15em] text-cvsu-gold/80">
+              <div className="text-[10px] uppercase tracking-[0.15em] text-yellow-300">
                 Alumni Tracking System
               </div>
             </div>
@@ -124,7 +147,7 @@ function Landing() {
             <Button asChild variant="ghost" className="text-white/80 hover:bg-cvsu-green/50 hover:text-white">
               <a href="/login">Log in</a>
             </Button>
-            <Button asChild className="bg-cvsu-gold text-cvsu-dark hover:bg-cvsu-gold/80">
+            <Button asChild className="bg-yellow-300 text-cvsu-dark hover:bg-yellow-500">
               <a href="/register">Register</a>
             </Button>
           </div>
@@ -138,22 +161,22 @@ function Landing() {
         <div className="relative z-10 mx-auto w-full max-w-3xl px-6 text-center">
           <Badge
             variant="outline"
-            className="mb-2 border-cvsu-gold/30 bg-cvsu-gold/10 px-3 py-1 text-[11px] uppercase tracking-[0.15em] text-cvsu-gold"
+            className="mb-4 border-yellow-300 bg-yellow/90 px-3 py-1 text-[11px] uppercase tracking-[0.15em] text-yellow-300"
           >
             Cavite State University — Naic Campus
           </Badge>
-          <h1 className="font-heading text-4xl leading-[1.1] tracking-tight text-white md:text-6xl lg:text-7xl uppercase">
-            Your alumni <span className="text-cvsu-gold"> community, </span>reconnected.
+          <h1 className="font-heading text-4xl leading-[1.1] tracking-tight text-white sm:text-4xl md:text-6xl lg:text-7xl uppercase font-bold">
+            Your alumni <span className="text-yellow-400"> community, </span>reconnected.
           </h1>
-          <p className="mx-auto mt-6 max-w-2xl text-base leading-relaxed text-white/80 md:text-lg">
+          <p className="mx-auto mt-6 max-w-2xl text-base leading-relaxed text-white md:text-lg">
             A centralized hub for CvSU Naic graduates. Track careers, share
             opportunities, stay in touch, and never miss a reunion.
           </p>
           <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
-            <Button asChild size="lg" className="gap-2 bg-cvsu-gold text-cvsu-dark hover:bg-cvsu-gold/80">
+            <Button asChild size="lg" className="gap-2 bg-yellow-400 text-cvsu-dark hover:bg-yellow-500">
               <a href="/register">Join the network <ArrowRight className="h-4 w-4" /></a>
             </Button>
-            <Button asChild size="lg" variant="ghost" className="text-white/80 hover:bg-cvsu-green/50 hover:text-white">
+            <Button asChild size="lg" className="text-white/80 hover:bg-black hover:text-white">
               <a href="/login">Log in</a>
             </Button>
           </div>
@@ -164,9 +187,6 @@ function Landing() {
         <FadeIn>
           <div className="mx-auto max-w-7xl px-6">
             <div className="mx-auto max-w-2xl text-center">
-              <h1 className="mb-4 bg-cvsu-gold/10 text-cvsu-dark hover:bg-cvsu-gold/20">
-                About the system
-              </h1>
               <h2 className="font-heading text-3xl tracking-tight text-cvsu-dark md:text-4xl">
                 Bridging CvSU Naic graduates across generations
               </h2>
@@ -179,12 +199,12 @@ function Landing() {
             </div>
             <div className="mt-16 grid gap-6 md:grid-cols-3">
               {[
-                { label: "Active alumni", value: "2,400+" },
-                { label: "Batches tracked", value: "15+" },
-                { label: "Partner companies", value: "120+" },
+                { label: "Active alumni", value: stats.alumni },
+                { label: "Batches tracked", value: stats.batches },
+                { label: "Partner companies", value: stats.partners },
               ].map((s, i) => (
                 <FadeIn key={s.label} delay={i * 150}>
-                  <div className="rounded-xl border border-cvsu-gold/20 bg-cvsu-light p-6 text-center transition duration-300 hover:-translate-y-1 hover:border-cvsu-gold/40 hover:shadow-md">
+                  <div className="rounded-xl border border-cvsu-green/20 bg-cvsu-light p-6 text-center transition duration-300 hover:-translate-y-1 hover:border-cvsu-green/40 hover:shadow-md">
                     <div className="font-heading text-4xl font-bold text-cvsu-green transition duration-300 group-hover:scale-110 md:text-5xl">
                       {s.value}
                     </div>
@@ -203,9 +223,6 @@ function Landing() {
         <FadeIn>
           <div className="mx-auto max-w-7xl px-6">
             <div className="mx-auto max-w-2xl text-center">
-              <Badge className="mb-4 bg-cvsu-gold/10 text-cvsu-dark hover:bg-cvsu-gold/20">
-                Features
-              </Badge>
               <h2 className="font-heading text-3xl tracking-tight text-cvsu-dark md:text-4xl">
                 Everything you need to stay connected
               </h2>
@@ -216,9 +233,9 @@ function Landing() {
             <div className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
               {features.map((f, i) => (
                 <FadeIn key={f.title} delay={i * 100}>
-                  <Card className="group border-cvsu-gold/10 bg-cvsu-light shadow-none transition duration-300 hover:-translate-y-1 hover:border-cvsu-gold/40 hover:shadow-md">
+                  <Card className="group border-cvsu-green/10 bg-cvsu-light shadow-none transition duration-300 hover:-translate-y-1 hover:border-cvsu-green/40 hover:shadow-md">
                     <CardContent className="flex flex-col items-start gap-3 p-6">
-                      <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-cvsu-gold/10 text-cvsu-green transition duration-300 group-hover:scale-110 group-hover:bg-cvsu-gold/20">
+                      <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-cvsu-green/10 text-cvsu-green transition duration-300 group-hover:scale-110 group-hover:bg-cvsu-green/20">
                         <f.icon className="h-5 w-5 transition duration-300 group-hover:scale-110" />
                       </div>
                       <h3 className="font-heading text-lg font-semibold text-cvsu-dark transition duration-300 group-hover:text-cvsu-green">
@@ -238,9 +255,6 @@ function Landing() {
         <FadeIn>
           <div className="mx-auto max-w-7xl px-6">
             <div className="mx-auto max-w-2xl text-center">
-              <Badge className="mb-4 bg-cvsu-gold/10 text-cvsu-dark hover:bg-cvsu-gold/20">
-                The team
-              </Badge>
               <h2 className="font-heading text-3xl tracking-tight text-cvsu-dark md:text-4xl">
                 Meet the developers
               </h2>
@@ -251,20 +265,20 @@ function Landing() {
             <div className="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
               {developers.map((dev, i) => (
                 <FadeIn key={dev.name} delay={i * 100}>
-                  <Card className="group overflow-hidden border-cvsu-gold/10 bg-cvsu-light shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-lg">
+                  <Card className="group overflow-hidden bg-white shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-lg">
                     <div className="relative aspect-[4/5] overflow-hidden bg-cvsu-light">
                       <img
                         src={dev.img}
                         alt={dev.name}
                         className="h-full w-full object-cover transition duration-500 group-hover:scale-110"
                       />
-                      <div className="absolute inset-0 bg-cvsu-dark/0 transition duration-300 group-hover:bg-cvsu-dark/30" />
+                      <div className="absolute inset-0 bg-cvsu-dark/0 transition duration-300" />
                     </div>
-                    <CardContent className="space-y-1 p-5">
-                      <h3 className="font-heading text-lg font-semibold text-cvsu-dark transition duration-300 group-hover:text-cvsu-green">
+                    <CardContent className="space-y-1">
+                      <h3 className="font-heading text-sm font-semibold text-cvsu-dark transition duration-300 group-hover:text-cvsu-green">
                         {dev.name}
                       </h3>
-                      <p className="text-sm text-cvsu-green/70">{dev.role}</p>
+                      <p className="text-xs font-bold uppercase text-yellow-500">{dev.role}</p>
                     </CardContent>
                   </Card>
                 </FadeIn>
@@ -287,7 +301,7 @@ function Landing() {
               <Button asChild size="lg" className="gap-2 bg-cvsu-green text-white hover:bg-cvsu-green/80">
                 <a href="/register">Create your account <ChevronRight className="h-4 w-4" /></a>
               </Button>
-              <Button asChild size="lg" variant="outline" className="border-cvsu-green text-white/80 hover:bg-cvsu-green/50 hover:text-white">
+              <Button asChild size="lg" className="text-white/80 hover:bg-black hover:text-white">
                 <a href="/login">Sign in</a>
               </Button>
             </div>
@@ -295,7 +309,7 @@ function Landing() {
         </FadeIn>
       </section>
 
-      <footer className="border-t border-cvsu-gold/10 bg-white py-12">
+      <footer className="border-t border-cvsu-green/10 bg-white py-12">
         <div className="mx-auto max-w-7xl px-6">
           <div className="flex flex-col items-center justify-between gap-6 md:flex-row">
             <div className="flex items-center gap-2.5">
