@@ -30,3 +30,6 @@ dist-ssr
 
 # Supabase migrations
 supabase/migrations/
+supabase/full_database.sql
+
+scripts/
